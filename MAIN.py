@@ -84,7 +84,6 @@ def start_game(stop=False):
 # отрисовка
 def draw():
     global run,score
-
     plas.draw()
 
     if run == "menu":
@@ -112,6 +111,7 @@ def draw():
     elif run == "game_over":
         screen.fill('black')
         over.draw()
+
 
 # действия
 def update():
