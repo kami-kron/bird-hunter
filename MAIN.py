@@ -35,7 +35,13 @@ bomba = []
 groms = []
 lives = []
 
-
+def play_music(run):
+    treks = {
+        "menu": "start menu",
+        "play": "dance",
+        "game_over": "game over"}
+    music.stop()
+    music.play(treks[run])
 # список птиц
 def respawn_bird():
     bird = Actor ("bird")
@@ -63,6 +69,7 @@ def respawn_grom():
 
 # жизни
 def respawn_live():
+    global run
     live = Actor("сердце")
     live.x = WIDTH - 50 - (50 * len(lives))
     live.y = 45
@@ -70,6 +77,7 @@ def respawn_live():
 
 
 def start_game(stop=False):
+
     for i in range(9):
         respawn_bird()
     for i in range(4):
@@ -174,6 +182,7 @@ def update():
         if len(lives) <= 0:
 
             run = "game_over"
+            play_music(run)
 
         if score > record:
            ride_record(score)
@@ -185,6 +194,7 @@ def on_key_down(key):
         run = 'pause' if run == 'play' else 'play'
     if key == keys.ESCAPE:
         run = "menu"
+        play_music(run)
         stop = True
     if key == keys.RETURN:
         birds.clear()
@@ -196,6 +206,7 @@ def on_key_down(key):
         stop = False
         start_game()
         run = 'play'
+        play_music(run)
 
 
 
@@ -208,9 +219,12 @@ def on_mouse_down(pos,button):
     if button == mouse.LEFT and start_button.collidepoint(pos):
         print(run)
         run = "play"
+        play_music(run)
         start_game(stop)
         if stop:
             clock.schedule(delay, 0.02)
+    if button == mouse.LEFT and exit_button.collidepoint(pos):
+        exit()
 
 # выход
 
