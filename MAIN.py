@@ -13,7 +13,7 @@ WIDTH = 900
 HEIGHT = 700
 TITLE = "ПТИЦEЛОВКА"
 
-run = "menu"    #menu play pause game_over
+run = "menu"    #menu play pause game_over winner
 score = 0
 record = read_record()
 print(record)
@@ -24,6 +24,7 @@ man = Actor ("super", (WIDTH/2, HEIGHT - 100))
 plas = Actor ("forest")
 over = Actor ("поражение",(WIDTH/2, HEIGHT/2))
 grom = Actor ("molnia")
+win = Actor ("победа", (WIDTH/2, HEIGHT/2 ))
 stop = False
 
 width_b = 500
@@ -39,7 +40,8 @@ def play_music(run):
     treks = {
         "menu": "start menu",
         "play": "dance",
-        "game_over": "game over"}
+        "game_over": "game over",
+        "winner": "победитель"}
     music.stop()
     music.play(treks[run])
 # список птиц
@@ -64,7 +66,7 @@ def respawn_grom():
     grom = Actor ("molnia")
     grom.x = random.randint(0,WIDTH)
     grom.y = random.randint(-700,-1)
-    grom.speed = random.randint(3,6)
+    grom.speed = random.randint(4,6)
     groms.append(grom)
 
 # жизни
@@ -78,11 +80,11 @@ def respawn_live():
 
 def start_game(stop=False):
 
-    for i in range(9):
+    for i in range(5):
         respawn_bird()
-    for i in range(4):
+    for i in range(5):
         respawn_bomb()
-    for i in range(3):
+    for i in range(5):
         respawn_grom()
     if not stop:
         for i in range(5):
@@ -119,6 +121,8 @@ def draw():
     elif run == "game_over":
         screen.fill('black')
         over.draw()
+    if run == "winner":
+        win.draw()
 
 
 # действия
@@ -144,7 +148,7 @@ def update():
                     lives.pop()
 
             if man.colliderect(bird):
-                score+= 1
+                score+= 10
                 birds.remove(bird)
                 respawn_bird()
     # респав бомб
@@ -159,7 +163,7 @@ def update():
                     if len(lives) > 0:
                         lives.pop()
             if man.colliderect(bomb):
-                score += 2
+                score += 20
                 bomba.remove(bomb)
                 respawn_bomb()
     # респавн молний
@@ -174,7 +178,7 @@ def update():
                     if len(lives) > 0:
                         lives.pop()
             if man.colliderect(grom):
-                score += 1
+                score += 15
                 groms.remove(grom)
                 respawn_grom()
 
@@ -186,6 +190,11 @@ def update():
 
         if score > record:
            ride_record(score)
+
+        if score >= 500:
+            run = "winner"
+            play_music(run)
+
 
 def on_key_down(key):
     global run,score,stop
